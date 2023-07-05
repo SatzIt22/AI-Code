@@ -1,0 +1,84 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2708
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 using UnityEngine;\
+using UnityEngine.EventSystems;\
+\
+public class MenuNavigation : MonoBehaviour\
+\{\
+    public GameObject defaultSelectedButton;\
+    public GameObject selectedButton;\
+    public GameObject backButton;\
+    public int rows;\
+    public int columns;\
+    public float buttonSpacing;\
+\
+    private int selectedIndex = 0;\
+    private bool isVertical = true;\
+    private bool isHorizontal = true;\
+\
+    private void Start()\
+    \{\
+        if (defaultSelectedButton != null)\
+        \{\
+            EventSystem.current.SetSelectedGameObject(defaultSelectedButton);\
+            selectedButton = defaultSelectedButton;\
+        \}\
+    \}\
+\
+    private void Update()\
+    \{\
+        if (isVertical && Input.GetAxisRaw("Vertical") != 0)\
+        \{\
+            int direction = (int)Input.GetAxisRaw("Vertical");\
+            MoveSelection(direction * columns);\
+        \}\
+        else if (isHorizontal && Input.GetAxisRaw("Horizontal") != 0)\
+        \{\
+            int direction = (int)Input.GetAxisRaw("Horizontal");\
+            MoveSelection(direction);\
+        \}\
+        else if (Input.GetButtonDown("Submit"))\
+        \{\
+            if (selectedButton != null)\
+            \{\
+                ExecuteEvents.Execute(selectedButton, new PointerEventData(EventSystem.current), ExecuteEvents.submitHandler);\
+            \}\
+        \}\
+        else if (Input.GetButtonDown("Cancel"))\
+        \{\
+            if (backButton != null)\
+            \{\
+                ExecuteEvents.Execute(backButton, new PointerEventData(EventSystem.current), ExecuteEvents.submitHandler);\
+            \}\
+        \}\
+    \}\
+\
+    private void MoveSelection(int direction)\
+    \{\
+        int newIndex = selectedIndex + direction;\
+\
+        if (newIndex < 0 || newIndex >= transform.childCount)\
+        \{\
+            return;\
+        \}\
+\
+        if (selectedIndex < transform.childCount)\
+        \{\
+            selectedButton.GetComponent<UnityEngine.UI.Selectable>().OnDeselect(null);\
+        \}\
+\
+        selectedIndex = newIndex;\
+        selectedButton = transform.GetChild(selectedIndex).gameObject;\
+\
+        if (selectedButton != null)\
+        \{\
+            selectedButton.GetComponent<UnityEngine.UI.Selectable>().OnSelect(null);\
+        \}\
+    \}\
+\}\
+}

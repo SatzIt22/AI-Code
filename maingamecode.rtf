@@ -1,0 +1,65 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2708
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 using UnityEngine;\
+using UnityEngine.SceneManagement;\
+\
+public class SphereGameController : MonoBehaviour \{\
+\
+    public GameObject[] characters;\
+    public float respawnDelay = 2.0f;\
+    public float replayDelay = 2.0f;\
+    public float maxHealth = 100.0f;\
+    public bool infiniteLives = false;\
+    public int maxLives = 3;\
+    public int currentLives = 0;\
+\
+    private float currentHealth;\
+    private bool isDead = false;\
+    private bool isPaused = false;\
+    private bool replayActive = false;\
+    private bool replaySaved = false;\
+    private int selectedCharacter = 0;\
+    private GameObject currentCharacter;\
+    private GameObject currentCheckpoint;\
+    private Animator currentAnimator;\
+    private Transform currentSpawnPoint;\
+    private Transform currentReplayPoint;\
+    private HealthBar healthBar;\
+\
+    void Start() \{\
+//check which mode is active, i.e. if Story Mode is active, turn on the health system & infinite lives\
+        currentHealth = maxHealth;\
+        currentLives = infiniteLives ? -1 : maxLives;\
+        healthBar = GetComponent<HealthBar>();\
+        healthBar.SetMaxHealth(maxHealth);\
+        currentCharacter = Instantiate(characters[selectedCharacter], transform.position, Quaternion.identity);\
+        currentAnimator = currentCharacter.GetComponent<Animator>();\
+        currentSpawnPoint = transform;\
+        currentReplayPoint = transform;\
+    \}\
+\
+    void Update() \{\
+        if (!isDead && !isPaused && !replayActive) \{\
+            // Character movement code here\
+        \}\
+        \
+        if (Input.GetKeyDown(KeyCode.Escape)) \{\
+            isPaused = !isPaused;\
+            Time.timeScale = isPaused ? 0 : 1;\
+            // Show/hide pause menu code here\
+        \}\
+\
+        if (replayActive && !replaySaved && Input.GetKeyDown(KeyCode.Space)) \{\
+            // Save replay code here\
+            replaySaved = true;\
+        \}\
+    \}\
+\
+    void FixedUpdate() \{\
+        if (!isDead && !isPaused && !replayActive) \{\
+}
